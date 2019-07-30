@@ -78,7 +78,7 @@ mod test;
 pub use self::error::Error;
 pub use self::filter::{postfilter, prefilter, Includer};
 pub use self::parse::{parse, SyntaxTree};
-pub use self::render::{ArticleHandle, HtmlRender, NullHandle, Render, TreeRender, WikidotHandle};
+pub use self::render::{MetadataObject, Render, User, TreeRender};
 
 use std::sync::Arc;
 
@@ -94,26 +94,28 @@ mod backtrace {
 }
 
 pub mod prelude {
-    pub use super::{Error, HtmlRender, Render, Result, StdResult, SyntaxTree, TreeRender};
+    pub use super::{Error, Render, Result, StdResult, SyntaxTree, User, TreeRender};
     pub use super::{parse, prefilter, transform};
+    pub use super::{MetadataObject};
 }
 
 pub mod include {
     pub use super::filter::Includer;
-    pub use super::filter::{NotFoundIncluder, NullIncluder};
+    //pub use super::filter::{NotFoundIncluder, NullIncluder};
 }
 
 pub type StdResult<T, E> = std::result::Result<T, E>;
 pub type Result<T> = StdResult<T, Error>;
 
-pub fn transform<R: Render>(
+pub fn transform<'a, R: Render>(
     id: u64,
-    handle: Arc<ArticleHandle>,
+    metadata: MetadataObject,
     text: &mut String,
     includer: &Includer,
+    url: &'a str,
 ) -> Result<R::Output> {
     prefilter(text, includer)?;
     let tree = parse(text)?;
-    let output = R::render(id, handle, &tree)?;
+    let output = R::render(id, url, metadata, &tree)?;
     Ok(output)
 }

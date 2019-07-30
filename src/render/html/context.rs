@@ -20,33 +20,35 @@
 
 //! Internal state object used during rendering.
 
-use super::{HtmlMeta, HtmlOutput};
-use crate::{ArticleHandle, Result};
+use super::{HtmlMeta, HtmlOutput, MetadataObject};
+use crate::{Result};
 use std::collections::HashSet;
 use std::fmt::{self, Debug, Write};
 use std::sync::Arc;
 
 #[derive(Clone)]
-pub struct HtmlContext {
+pub struct HtmlContext<'a> {
     html: String,
     style: String,
     meta: Vec<HtmlMeta>,
     write_mode: WriteMode,
     footnotes: FootnoteContext,
     id: u64,
-    handle: Arc<ArticleHandle>,
+    metadata: MetadataObject,
+    url: &'a str
 }
 
-impl HtmlContext {
-    pub fn new(id: u64, handle: Arc<ArticleHandle>) -> Self {
-        HtmlContext {
+impl<'a> HtmlContext<'a> {
+    pub fn new(id: u64, url: &'a str, metadata: MetadataObject) -> Self {
+        HtmlContext::<'a> {
             html: String::new(),
             style: String::new(),
             meta: Vec::new(),
             write_mode: WriteMode::Html,
             footnotes: FootnoteContext::new(),
-            handle,
             id,
+            metadata,
+            url,
         }
     }
 
@@ -57,9 +59,19 @@ impl HtmlContext {
         self.id
     }
 
-    #[inline]
+    #[allow(dead_code)]
+    pub fn url(&self) -> &'a str {
+        self.url
+    }
+
+    /*#[inline]
     pub fn handle(&self) -> Arc<ArticleHandle> {
         Arc::clone(&self.handle)
+    }*/
+    
+    #[inline]
+    pub fn metadata(&self) -> &MetadataObject {
+      &self.metadata
     }
 
     #[inline]
@@ -135,21 +147,21 @@ impl HtmlContext {
     // External calls
     #[inline]
     pub fn get_title(&self) -> Result<String> {
-        self.handle.get_title(self.id)
+        Ok(String::from(&self.metadata.title))
     }
 
     #[inline]
     pub fn get_rating(&self) -> Result<Option<i32>> {
-        self.handle.get_rating(self.id)
+        Ok(Some(self.metadata.rating))
     }
 
     #[inline]
     pub fn get_tags(&mut self) -> Result<HashSet<String>> {
-        self.handle.get_tags(self.id)
+        Ok(self.metadata.tags.clone())
     }
 }
 
-impl Into<HtmlOutput> for HtmlContext {
+impl Into<HtmlOutput> for HtmlContext<'_> {
     fn into(self) -> HtmlOutput {
         HtmlOutput {
             html: self.html,
@@ -159,7 +171,7 @@ impl Into<HtmlOutput> for HtmlContext {
     }
 }
 
-impl Debug for HtmlContext {
+impl Debug for HtmlContext<'_> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         f.debug_struct("HtmlContext")
             .field("html", &self.html)
@@ -171,7 +183,7 @@ impl Debug for HtmlContext {
     }
 }
 
-impl Write for HtmlContext {
+impl Write for HtmlContext<'_> {
     #[inline]
     fn write_str(&mut self, s: &str) -> fmt::Result {
         self.buffer().write_str(s)

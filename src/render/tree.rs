@@ -21,9 +21,9 @@
 //! A renderer which outputs a formatted view of the input AST.
 //! For debugging or some other trivial renderer need.
 
-use crate::{ArticleHandle, Result, SyntaxTree};
+use crate::{Result, SyntaxTree};
 use std::sync::Arc;
-use super::Render;
+use super::{Render, MetadataObject};
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub struct TreeRender;
@@ -31,7 +31,7 @@ pub struct TreeRender;
 impl Render for TreeRender {
     type Output = String;
 
-    fn render(_id: u64, _handle: Arc<ArticleHandle>, tree: &SyntaxTree) -> Result<String> {
+    fn render<'a>(_id: u64, _url: &'a str, _handle: MetadataObject, tree: &SyntaxTree) -> Result<String> {
         Ok(format!("{:#?}", tree))
     }
 }

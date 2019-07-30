@@ -73,11 +73,12 @@ mod prelude {
 }
 
 pub use self::context::HtmlContext;
+pub use super::{MetadataObject, User, get_user};
 pub use self::meta::HtmlMeta;
 
 use self::finish::render_finish;
 use self::prelude::*;
-use crate::{postfilter, ArticleHandle};
+use crate::postfilter;
 use std::sync::Arc;
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
@@ -86,8 +87,8 @@ pub struct HtmlRender;
 impl Render for HtmlRender {
     type Output = HtmlOutput;
 
-    fn render(id: u64, handle: Arc<ArticleHandle>, tree: &SyntaxTree) -> Result<HtmlOutput> {
-        let mut ctx = HtmlContext::new(id, handle);
+    fn render<'a>(id: u64, url: &'a str, metadata: MetadataObject, tree: &SyntaxTree) -> Result<HtmlOutput> {
+        let mut ctx = HtmlContext::new(id, url, metadata);
         render_paragraphs(&mut ctx, tree.paragraphs())?;
         render_finish(&mut ctx)?;
         postfilter(ctx.buffer())?;

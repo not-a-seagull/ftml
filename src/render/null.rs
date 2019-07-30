@@ -21,9 +21,9 @@
 //! A "renderer" which only returns a constant string.
 //! Matches Wikidot's `/norender/true` specification.
 
-use crate::{ArticleHandle, Result, SyntaxTree};
+use crate::{Result, SyntaxTree};
 use std::sync::Arc;
-use super::Render;
+use super::{Render, MetadataObject};
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub struct NullRender;
@@ -32,7 +32,7 @@ impl Render for NullRender {
     type Output = &'static str;
 
     #[inline]
-    fn render(_id: u64, _handle: Arc<ArticleHandle>, _tree: &SyntaxTree) -> Result<&'static str> {
+    fn render<'a>(_id: u64, _url: &'a str,  _handle: MetadataObject, _tree: &SyntaxTree) -> Result<&'static str> {
         Ok("[[content]]")
     }
 }

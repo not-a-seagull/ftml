@@ -21,6 +21,7 @@
 use self::Word::*;
 use super::module;
 use super::prelude::*;
+use super::get_user;
 use crate::enums::LinkText;
 use percent_encoding::{percent_encode, DEFAULT_ENCODE_SET};
 
@@ -328,7 +329,7 @@ pub fn render_word(ctx: &mut HtmlContext, word: &Word) -> Result<()> {
             username,
             show_picture,
         } => {
-            let user = ctx.handle().get_user(username)?;
+            let user = get_user(username)?;
 
             match user {
                 Some(user) => {
