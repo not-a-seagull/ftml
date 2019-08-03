@@ -78,9 +78,9 @@ mod test;
 pub use self::error::Error;
 pub use self::filter::{postfilter, prefilter, Includer};
 pub use self::parse::{parse, SyntaxTree};
-pub use self::render::{MetadataObject, Render, User, TreeRender};
+pub use self::render::{HtmlRender, MetadataObject, Render, User, TreeRender};
 
-use std::sync::Arc;
+//use std::sync::Arc;
 
 mod backtrace {
     use color_backtrace;
@@ -96,12 +96,12 @@ mod backtrace {
 pub mod prelude {
     pub use super::{Error, Render, Result, StdResult, SyntaxTree, User, TreeRender};
     pub use super::{parse, prefilter, transform};
-    pub use super::{MetadataObject};
+    pub use super::{HtmlRender, MetadataObject};
 }
 
 pub mod include {
     pub use super::filter::Includer;
-    //pub use super::filter::{NotFoundIncluder, NullIncluder};
+    pub use super::filter::{NotFoundIncluder, NullIncluder};
 }
 
 pub type StdResult<T, E> = std::result::Result<T, E>;

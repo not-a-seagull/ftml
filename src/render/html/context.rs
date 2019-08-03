@@ -24,7 +24,7 @@ use super::{HtmlMeta, HtmlOutput, MetadataObject};
 use crate::{Result};
 use std::collections::HashSet;
 use std::fmt::{self, Debug, Write};
-use std::sync::Arc;
+//use std::sync::Arc;
 
 #[derive(Clone)]
 pub struct HtmlContext<'a> {
@@ -70,6 +70,7 @@ impl<'a> HtmlContext<'a> {
     }*/
     
     #[inline]
+    #[allow(dead_code)]
     pub fn metadata(&self) -> &MetadataObject {
       &self.metadata
     }

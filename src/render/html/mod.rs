@@ -79,7 +79,7 @@ pub use self::meta::HtmlMeta;
 use self::finish::render_finish;
 use self::prelude::*;
 use crate::postfilter;
-use std::sync::Arc;
+//use std::sync::Arc;
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub struct HtmlRender;

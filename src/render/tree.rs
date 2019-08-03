@@ -22,7 +22,7 @@
 //! For debugging or some other trivial renderer need.
 
 use crate::{Result, SyntaxTree};
-use std::sync::Arc;
+//use std::sync::Arc;
 use super::{Render, MetadataObject};
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]

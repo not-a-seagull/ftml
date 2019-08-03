@@ -46,7 +46,9 @@ use serde_json::Value;
 
 lazy_static! {
   static ref USER_DATABASE: String = {
-    let mut file = match File::open("../config.json") {
+    //println!({}, std::env::current_dir);
+
+    let mut file = match File::open("config.json") {
       Ok(f) => f,
       Err(_e) => panic!("Unable to locate confiugration file"),
     };
