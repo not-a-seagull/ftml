@@ -19,6 +19,7 @@
  */
 
 mod css;
+mod editnew;
 mod listpages;
 mod rate;
 
@@ -32,6 +33,7 @@ mod prelude {
 }
 
 use self::css::CssModule;
+use self::editnew::EditnewModule;
 use self::listpages::ListPagesModule;
 use self::prelude::*;
 use self::rate::RateModule;
@@ -56,6 +58,8 @@ pub fn render(
         RateModule::render(ctx, arguments, contents)?;
     } else if name.eq_ignore_ascii_case("listpages") | name.eq_ignore_ascii_case("list_pages") {
         ListPagesModule::render(ctx, arguments, contents)?;
+    } else if name.eq_ignore_ascii_case("editnew") {
+        EditnewModule::render(ctx, arguments, contents)?;
     } else {
         return Err(Error::Msg(format!("No such module: '{}'", name)));
     }
